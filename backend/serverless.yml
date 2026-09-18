@@ -1,0 +1,111 @@
+# 2026-01-19 15:25:00 EST - Serverless Framework 설정
+# PRD 001 v1.4.4 섹션 4.3 배포 구조
+# 2026-01-22 EST - 배포 버킷 명시 (IAM 권한 전파 지연 우회)
+
+service: pinger-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1  # Virginia
+  stage: ${opt:stage, 'dev'}
+  
+  # 배포 버킷 명시 (SSM 권한 전파 지연 우회)
+  deploymentBucket:
+    name: pinger-backend-deploy-20260122161333
+  
+  environment:
+    INSTANCES_TABLE: ${self:service}-instances-${self:provider.stage}
+    APP_CONFIG_TABLE: ${self:service}-config-${self:provider.stage}
+    API_KEY: ${env:API_KEY}  # 로컬 환경변수에서 불러옴
+    FIREBASE_PROJECT_ID: ${env:FIREBASE_PROJECT_ID}
+    FIREBASE_CLIENT_EMAIL: ${env:FIREBASE_CLIENT_EMAIL}
+    FIREBASE_PRIVATE_KEY: ${env:FIREBASE_PRIVATE_KEY}
+  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INSTANCES_TABLE}"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.APP_CONFIG_TABLE}"
+
+functions:
+  # 1분마다 자동 실행: 모든 인스턴스 체크
+  checkAllInstances:
+    handler: handler.checkAllInstances
+    timeout: 60
+    events:
+      - schedule:
+          rate: rate(1 minute)
+          enabled: true
+  
+  # API Gateway: 앱에서 호출
+  api:
+    handler: handler.apiHandler
+    timeout: 30
+    events:
+      - http:
+          path: /config
+          method: PUT
+          cors: true
+      - http:
+          path: /instances
+          method: POST
+          cors: true
+      - http:
+          path: /instances
+          method: GET
+          cors: true
+      - http:
+          path: /instances/{id}
+          method: PUT
+          cors: true
+      - http:
+          path: /instances/{id}
+          method: DELETE
+          cors: true
+
+resources:
+  Resources:
+    # DynamoDB 테이블: instances
+    InstancesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.INSTANCES_TABLE}
+        AttributeDefinitions:
+          - AttributeName: instance_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: instance_id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST  # 온디맨드 (개인용)
+    
+    # DynamoDB 테이블: app_config
+    AppConfigTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.APP_CONFIG_TABLE}
+        AttributeDefinitions:
+          - AttributeName: config_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: config_id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+outputs:
+  ApiUrl:
+    Description: "API Gateway URL"
+    Value:
+      Fn::Join:
+        - ""
+        - - "https://"
+          - Ref: ApiGatewayRestApi
+          - ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}"

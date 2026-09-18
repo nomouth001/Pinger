@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Serverless
+.serverless/
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,50 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
+    // 2026-01-19 15:37:00 EST - Firebase 연동
+    id "com.google.gms.google-services"
+}
+
+android {
+    namespace = "com.pinger.pinger"
+    // 2026-01-19 16:35:00 EST - compileSdk 34로 유지 (SDK 35 jlink 오류 회피)
+    // 2026-01-20 00:12:00 EST - compileSdk 35로 복원 (플러그인 요구사항)
+    compileSdk = 36
+    ndkVersion = flutter.ndkVersion
+
+    // 2026-01-20 00:18:00 EST - Java 17로 상향 (SDK 35 호환성, jlink 오류 해결)
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId = "com.pinger.pinger"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // 2026-01-19 15:37:00 EST - minSdk 21로 상향 (FCM 요구사항)
+        minSdk = 21
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}

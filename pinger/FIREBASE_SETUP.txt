@@ -1,0 +1,56 @@
+// 2026-01-19 15:35:00 EST - Firebase 설정 가이드
+// PRD 001 v1.4.4 섹션 5.1 Firebase 설정
+
+/*
+Firebase 설정 단계:
+
+1. Firebase Console (https://console.firebase.google.com/)
+   - 새 프로젝트 생성 또는 기존 프로젝트 선택
+   - 프로젝트 이름: "Pinger"
+
+2. Android 앱 추가
+   - Android 패키지 이름: com.example.pinger (또는 커스텀)
+   - 앱 닉네임: Pinger
+   - SHA-1 인증서 지문: 생략 가능 (개인용)
+
+3. google-services.json 다운로드
+   - Firebase Console에서 다운로드
+   - 위치: pinger/android/app/google-services.json
+   - 이 파일은 로컬 설정이므로 Git에 커밋하지 않습니다 (.gitignore 적용).
+
+4. Firebase Admin SDK (Lambda용)
+   - 프로젝트 설정 → 서비스 계정
+   - "새 비공개 키 생성" 클릭
+   - 다운로드한 JSON 파일의 내용을 backend/.env에 복사:
+     * FIREBASE_PROJECT_ID
+     * FIREBASE_CLIENT_EMAIL
+     * FIREBASE_PRIVATE_KEY
+
+5. FCM 설정
+   - Cloud Messaging API 활성화
+   - 기본 설정으로 충분 (개인용)
+
+6. Android 빌드 설정
+   - pinger/android/build.gradle에 다음 추가:
+     
+     buildscript {
+       dependencies {
+         classpath 'com.google.gms:google-services:4.4.0'
+       }
+     }
+   
+   - pinger/android/app/build.gradle 하단에 추가:
+     
+     apply plugin: 'com.google.gms.google-services'
+
+7. AndroidManifest.xml 권한
+   - pinger/android/app/src/main/AndroidManifest.xml에 추가:
+     
+     <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+완료 후 앱 재빌드 필요!
+*/
+
+// 이 파일은 가이드용 주석 파일입니다.
+// 실제 설정은 위 단계를 따라 진행하세요.

@@ -1,0 +1,45 @@
+// 2026-01-19 15:38:00 EST - Firebase 플러그인 추가
+// 2026-01-20 00:18:00 EST - AGP 8.6.1, Kotlin 1.9.0 명시 (SDK 35 호환성)
+buildscript {
+    ext.kotlin_version = '1.9.0'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.6.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.4.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    
+    // 2026-01-20 00:40:00 EST - 모든 서브프로젝트(플러그인 포함) SDK 36으로 강제 통일
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                compileSdkVersion 36
+                if (project.android.hasProperty('buildToolsVersion')) {
+                    buildToolsVersion "36.0.0"
+                }
+            }
+        }
+    }
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

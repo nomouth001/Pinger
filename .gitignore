@@ -1,0 +1,175 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.keystore
+**/Keystore_Info.txt
+*.pem
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+/lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.template
+*.local.json
+**/*firebase-adminsdk*.json
+**/.serverless/
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+debug.log
+
+# Database
+*.db
+*.sqlite3
+
+# Temporary files
+_temp_archive/
+temp/
+tmp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Static files (generated)
+
+logs/ai_prompt/
+logs/ai_result/
+scripts/__pycache__/
+scripts/logs/
+scripts/logs/results/
+
+# Records_Archives
+z_cursor_backup/
+z_DevDocu_Backup/
+z_reference/
+
+# Flask session files
+flask_session/
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Database backups and exports
+migration_backup_*.json
+backup_*.json
+test_export.json
+
+# Uploads
+uploads/
+
+# Redis
+*.rdb
+dump.rdb
+
+# Generated charts
+static/charts/*
+!static/charts/.gitkeep
+
+# Backend cache
+backend/.cache/
+
+# AI Analysis results (temporary data)
+backend/analysis_results/
+
+# Nginx logs
+/var/log/nginx/
+
+# Google Play Service Account Keys (SECURITY)
+backend/keys/service-account.json
+backend/coin_config/google-play-service-account.json
+**/google-play-service-account.json
+**/service-account.json
+
+# Local Firebase client configuration
+**/google-services.json
+**/GoogleService-Info.plist
